@@ -14,7 +14,7 @@ if uploaded_file is not None:
     # Read the Excel file
     try:
         df = pd.read_excel(uploaded_file)
-        
+
         # Display Data Preview
         st.write("### Data Preview")
         st.dataframe(df)
@@ -28,7 +28,7 @@ if uploaded_file is not None:
 
         # Dropdowns for selecting columns
         numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
-        
+
         if numeric_columns:
             # Correlation Heatmap
             st.write("#### Correlation Heatmap")
@@ -38,7 +38,7 @@ if uploaded_file is not None:
 
             # Boxplot
             st.write("#### Boxplot")
-            box_col = st.selectbox("Select a column for Boxplot", numeric_columns)
+            box_col = st.selectbox("Select a column for Boxplot", numeric_columns, key="boxplot")
             if box_col:
                 fig, ax = plt.subplots()
                 sns.boxplot(y=df[box_col], ax=ax)
@@ -47,7 +47,7 @@ if uploaded_file is not None:
 
             # Histogram
             st.write("#### Histogram")
-            hist_col = st.selectbox("Select a column for Histogram", numeric_columns)
+            hist_col = st.selectbox("Select a column for Histogram", numeric_columns, key="histogram")
             if hist_col:
                 fig, ax = plt.subplots()
                 sns.histplot(df[hist_col], bins=20, kde=True, ax=ax)
@@ -56,15 +56,15 @@ if uploaded_file is not None:
 
             # Interactive Scatter Plot
             st.write("#### Interactive Scatter Plot")
-            scatter_x = st.selectbox("X-axis", numeric_columns, index=0)
-            scatter_y = st.selectbox("Y-axis", numeric_columns, index=1 if len(numeric_columns) > 1 else 0)
+            scatter_x = st.selectbox("X-axis", numeric_columns, index=0, key="scatter_x")
+            scatter_y = st.selectbox("Y-axis", numeric_columns, index=1 if len(numeric_columns) > 1 else 0, key="scatter_y")
             if scatter_x and scatter_y:
                 fig = px.scatter(df, x=scatter_x, y=scatter_y, title=f"{scatter_x} vs {scatter_y}")
                 st.plotly_chart(fig)
 
         else:
             st.warning("No numeric columns available for visualization.")
-    
+
     except Exception as e:
         st.error(f"Error loading file: {e}")
 else:
